@@ -1,4 +1,15 @@
+html {
+	height: 100%;
+}
+
 body {
-  padding: 10px;
-  font-family: sans-serif;
+	height: 100%;
+}
+
+footer {
+	margin-top: -56px;
+}
+
+.jumbotron {
+	padding: 2rem !important;
 }
