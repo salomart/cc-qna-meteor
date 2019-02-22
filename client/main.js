@@ -1,9 +1,7 @@
-import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
-
-import './main.html';
+import '/client/routes/routes';
 
 require('jquery');
 require('popper.js');
 require('bootstrap');
-require('bootstrap/dist/css/bootstrap.min.css');
+require('bootstrap/dist/css/bootstrap.css');
