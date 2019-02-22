@@ -1,0 +1,16 @@
+{
+	"meteor-azure": {
+		"siteName": "cc-qna-meteor",
+		"resourceGroup": "cc-qna",
+		"subscriptionId": "b7369654-f81d-4363-873d-ce7bae448c3b",
+		"tenantId": "e101b4a4-0ac0-43d3-bd70-b5b8c30fbb59",
+		"deploymentCreds": {
+			"username": "salomart",
+			"password": "cse6331qna"
+		},
+		"envVariables": {
+			"ROOT_URL": "https://cc-qna-meteor.azurewebsites.net",
+			"MONGO_URL": "mongodb://localhost:27017"
+		}
+	}
+}
