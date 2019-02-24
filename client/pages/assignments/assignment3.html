@@ -1,0 +1,45 @@
+<template name="assignment3">
+	<h3>Task 1: Random Select Queries</h3>
+	<br>
+	<form class="a3task1">
+		<div class="form-group">
+			<label for="tuples">Tuples:</label>
+			<input type="text" name="tuples" id="tuples" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="rowLimit">Row Limit:</label>
+			<input type="number" name="rowLimit" id="rowLimit" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="numOfQueries">Number of Queries:</label>
+			<input type="number" name="numOfQueries" id="numOfQueries" class="form-control" />
+		</div>
+		<input type="submit" value="Get Execution Time" class="btn btn-primary" />
+	</form>
+	<br>
+	<span>Task 1 Execution Time: {{#if taskOneTime}} {{taskOneTime}}ms {{/if}}</span>
+	<hr>
+	<h3>Task 2: Random Select Queries (Filtered By Net)</h3>
+	<br>
+	<form class="a3task2">
+		<div class="form-group">
+			<label for="tuples2">Tuples:</label>
+			<input type="text" name="tuples" id="tuples2" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="rowLimit2">Row Limit:</label>
+			<input type="number" name="rowLimit" id="rowLimit2" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="numOfQueries2">Number of Queries:</label>
+			<input type="number" name="numOfQueries" id="numOfQueries2" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="net">Net:</label>
+			<input type="text" name="net" id="net" class="form-control" />
+		</div>
+		<input type="submit" value="Get Execution Time" class="btn btn-primary" />
+	</form>
+	<br>
+	<span>Task 2 Execution Time: {{#if taskTwoTime}} {{taskTwoTime}}ms {{/if}}</span>
+</template>
