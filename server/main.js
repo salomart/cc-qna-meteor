@@ -25,10 +25,9 @@ Meteor.startup(() => {
 Meteor.methods({
 	'getMagsByRangeAndNet': function(lowestMag, highestMag, net) {
 		var fut = new Future();
-		var query = 'SELECT mag FROM q2quakes WHERE mag >= ' + lowestMag
-		+ ' AND mag <= ' + highestMag + ' AND net = "' + net + '"';
 		
-		connection.query(query, function (error, results, fields) {
+		connection.query('SELECT mag FROM q2quakes WHERE mag >= ? AND mag <= ? AND net = ?',
+				[lowestMag, highestMag, net], function (error, results, fields) {
 			if (!error) {
 				fut.return(results);
 			}
