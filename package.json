@@ -11,6 +11,7 @@
     "@babel/runtime": "^7.3.1",
     "bootstrap": "^4.3.1",
     "d3": "^5.9.1",
+    "ioredis": "^4.6.2",
     "jquery": "^3.3.1",
     "meteor-azure": "^2.1.0-rc.7",
     "meteor-node-stubs": "^0.4.1",
