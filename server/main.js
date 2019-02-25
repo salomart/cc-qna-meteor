@@ -30,11 +30,13 @@ Meteor.methods({
 				[lowestMag, highestMag, net], function (error, results, fields) {
 			if (!error) {
 				fut.return(results);
+			} else {
+				fut.return([]);
 			}
 		});
 		
 		var data = fut.wait();
-		return data ? data : [];
+		return data;
 	},
 	'getTimeOne': function(tuples, rowLimit, numOfQueries) {
 		var startTime = new Date();
