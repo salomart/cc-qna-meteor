@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 Future = Npm.require('fibers/future');
 
 var mysql = require('mysql');

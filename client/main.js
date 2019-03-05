@@ -1,4 +1,3 @@
-import { ReactiveVar } from 'meteor/reactive-var';
 import '/client/routes/routes';
 
 require('jquery');
