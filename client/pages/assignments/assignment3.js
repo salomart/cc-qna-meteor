@@ -1,25 +1,25 @@
-var taskOneTime = new ReactiveVar(null);
-var taskTwoTime = new ReactiveVar(null);
-var taskThreeTime = new ReactiveVar(null);
-var taskFourTime = new ReactiveVar(null);
+var sqlExTime = new ReactiveVar(null);
+var sqlRisExTime = new ReactiveVar(null);
+var redisExTime = new ReactiveVar(null);
+var redisRisExTime = new ReactiveVar(null);
 
 Template.assignment3.helpers({
-	'taskOneTime': function() {
-		return taskOneTime.get();
+	'sqlExTime': function() {
+		return sqlExTime.get();
 	},
-	'taskTwoTime': function() {
-		return taskTwoTime.get();
+	'sqlRisExTime': function() {
+		return sqlRisExTime.get();
 	},
-	'taskThreeTime': function() {
-		return taskThreeTime.get();
+	'redisExTime': function() {
+		return redisExTime.get();
 	},
-	'taskFourTime': function() {
-		return taskFourTime.get();
+	'redisRisExTime': function() {
+		return redisRisExTime.get();
 	}
 });
 
 Template.assignment3.events({
-	'submit .a3task1': function(event) {
+	'submit .getSqlExTime': function(event) {
 		event.preventDefault();
 		
 		var tuples = event.target.tuples.value;
@@ -27,13 +27,13 @@ Template.assignment3.events({
 		var numOfQueries = event.target.numOfQueries.value;
 		numOfQueries ? numOfQueries : "1";
 		
-		Meteor.call('getTimeOne', tuples, numOfQueries, function(error, result) {
+		Meteor.call('getSqlExTime', tuples, numOfQueries, function(error, result) {
 			if (!error) {
-				taskOneTime.set(result);
+				sqlExTime.set(result);
 			}
 		});
 	},
-	'submit .a3task2': function(event) {
+	'submit .getSqlRisExTime': function(event) {
 		event.preventDefault();
 		
 		var tuples = event.target.tuples.value;
@@ -43,13 +43,13 @@ Template.assignment3.events({
 		var net = event.target.net.value;
 		net = net ? net : "us";
 		
-		Meteor.call('getTimeTwo', tuples, numOfQueries, net, function(error, result) {
+		Meteor.call('getSqlRisExTime', tuples, numOfQueries, net, function(error, result) {
 			if (!error) {
-				taskTwoTime.set(result);
+				sqlRisExTime.set(result);
 			}
 		});
 	},
-	'submit .a3task3': function(event) {
+	'submit .getRedisExTime': function(event) {
 		event.preventDefault();
 		
 		var tuples = event.target.tuples.value;
@@ -57,13 +57,13 @@ Template.assignment3.events({
 		var numOfQueries = event.target.numOfQueries.value;
 		numOfQueries ? numOfQueries : "1";
 		
-		Meteor.call('getTimeThree', tuples, numOfQueries, function(error, result) {
+		Meteor.call('getRedisExTime', tuples, numOfQueries, function(error, result) {
 			if (!error) {
-				taskThreeTime.set(result);
+				redisExTime.set(result);
 			}
 		});
 	},
-	'submit .a3task4': function(event) {
+	'submit .getRedisRisExTime': function(event) {
 		event.preventDefault();
 		
 		var tuples = event.target.tuples.value;
@@ -71,9 +71,9 @@ Template.assignment3.events({
 		var numOfQueries = event.target.numOfQueries.value;
 		numOfQueries ? numOfQueries : "1";
 		
-		Meteor.call('getTimeFour', tuples, numOfQueries, net, function(error, result) {
+		Meteor.call('getRedisRisExTime', tuples, numOfQueries, net, function(error, result) {
 			if (!error) {
-				taskFourTime.set(result);
+				redisRisExTime.set(result);
 			}
 		});
 	}

@@ -46,7 +46,7 @@ Meteor.methods({
 		var data = fut.wait();
 		return data;
 	},
-	'getTimeOne': function(tuples, numOfQueries) {
+	'getSqlExTime': function(tuples, numOfQueries) {
 		var startTime = new Date();
 		
 		for (i=0; i<numOfQueries; i++) {
@@ -68,7 +68,7 @@ Meteor.methods({
 		var endTime = new Date();
 		return endTime - startTime;
 	},
-	'getTimeTwo': function(tuples, numOfQueries, net) {
+	'getSqlRisExTime': function(tuples, numOfQueries, net) {
 		var queryStr = 'SELECT * FROM q2quakes WHERE net = ? ORDER BY RAND() LIMIT ' + tuples;
 		var startTime = new Date();
 		
@@ -90,7 +90,7 @@ Meteor.methods({
 		var endTime = new Date();
 		return endTime - startTime;
 	},
-	'getTimeThree': function(tuples, numOfQueries) {
+	'getRedisExTime': function(tuples, numOfQueries) {
 		var cursor = Math.floor(Date.now()/1000);
 		var match = '*';
 		var startTime = new Date();
@@ -118,7 +118,7 @@ Meteor.methods({
 		var endTime = new Date();
 		return endTime - startTime;
 	},
-	'getTimeFour': function(tuples, numOfQueries, net) {
+	'getRedisRisExTime': function(tuples, numOfQueries, net) {
 		var cursor = Math.floor(Date.now()/1000);
 		var match = '*';
 		var startTime = new Date();
