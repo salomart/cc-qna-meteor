@@ -1,30 +1,30 @@
 <template name="assignment3">
 	<h3>Task 1: Select Random Tuples (SQL)</h3>
 	<br>
-	<form class="a3task1">
+	<form class="getSqlExTime">
 		<div class="form-group">
 			<label for="tuples">Max Tuples:</label>
 			<input type="text" name="tuples" id="tuples" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label for="numOfQueries">Number of Queries:</label>
-			<input type="number" name="numOfQueries" id="numOfQueries" class="form-control" />
+			<input type="text" name="numOfQueries" id="numOfQueries" class="form-control" />
 		</div>
 		<input type="submit" value="Get Execution Time" class="btn btn-primary" />
 	</form>
 	<br>
-	<span>Task 1 Execution Time: {{#if taskOneTime}} {{taskOneTime}}ms {{/if}}</span>
+	<span>SQL Execution Time: {{#if sqlExTime}} {{sqlExTime}}ms {{/if}}</span>
 	<hr>
 	<h3>Task 2: Select Random Tuples (SQL: Filtered By Net)</h3>
 	<br>
-	<form class="a3task2">
+	<form class="getSqlRisExTime">
 		<div class="form-group">
 			<label for="tuples2">Max Tuples:</label>
 			<input type="text" name="tuples" id="tuples2" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label for="numOfQueries2">Number of Queries:</label>
-			<input type="number" name="numOfQueries" id="numOfQueries2" class="form-control" />
+			<input type="text" name="numOfQueries" id="numOfQueries2" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label for="net">Net:</label>
@@ -33,34 +33,34 @@
 		<input type="submit" value="Get Execution Time" class="btn btn-primary" />
 	</form>
 	<br>
-	<span>Task 2 Execution Time: {{#if taskTwoTime}} {{taskTwoTime}}ms {{/if}}</span>
+	<span>SQL (restricted) Execution Time: {{#if sqlRisExTime}} {{sqlRisExTime}}ms {{/if}}</span>
 	<hr>
 	<h3>Task 3: Select Random Tuples (Redis)</h3>
 	<br>
-	<form class="a3task3">
+	<form class="getRedisExTime">
 		<div class="form-group">
 			<label for="tuples3">Max Tuples:</label>
 			<input type="text" name="tuples" id="tuples3" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label for="numOfQueries3">Number of Queries:</label>
-			<input type="number" name="numOfQueries" id="numOfQueries3" class="form-control" />
+			<input type="text" name="numOfQueries" id="numOfQueries3" class="form-control" />
 		</div>
 		<input type="submit" value="Get Execution Time" class="btn btn-primary" />
 	</form>
 	<br>
-	<span>Task 3 Execution Time: {{#if taskThreeTime}} {{taskThreeTime}}ms {{/if}}</span>
+	<span>Redis Execution Time: {{#if redisExTime}} {{redisExTime}}ms {{/if}}</span>
 	<hr>
 	<h3>Task 4: Select Random Tuples (Redis: Filtered By Net)</h3>
 	<br>
-	<form class="a3task4">
+	<form class="getRedisRisExTime">
 		<div class="form-group">
 			<label for="tuples4">Max Tuples:</label>
 			<input type="text" name="tuples" id="tuples4" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label for="numOfQueries4">Number of Queries:</label>
-			<input type="number" name="numOfQueries" id="numOfQueries4" class="form-control" />
+			<input type="text" name="numOfQueries" id="numOfQueries4" class="form-control" />
 		</div>
 		<div class="form-group">
 			<label for="net2">Net:</label>
@@ -69,5 +69,5 @@
 		<input type="submit" value="Get Execution Time" class="btn btn-primary" />
 	</form>
 	<br>
-	<span>Task 4 Execution Time: {{#if taskFourTime}} {{taskFourTime}}ms {{/if}}</span>
+	<span>Redis (restricted) Execution Time: {{#if redisRisExTime}} {{redisRisExTime}}ms {{/if}}</span>
 </template>

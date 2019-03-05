@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 Future = Npm.require('fibers/future');
 
 var mysql = require('mysql');
@@ -47,7 +46,7 @@ Meteor.methods({
 		var data = fut.wait();
 		return data;
 	},
-	'getTimeOne': function(tuples, numOfQueries) {
+	'getSqlExTime': function(tuples, numOfQueries) {
 		var startTime = new Date();
 		
 		for (i=0; i<numOfQueries; i++) {
@@ -59,7 +58,7 @@ Meteor.methods({
 					fut.return(results);
 				} else {
 					console.log(error);
-					return 'error';
+					fut.return([]);
 				}
 			});
 			
@@ -69,7 +68,7 @@ Meteor.methods({
 		var endTime = new Date();
 		return endTime - startTime;
 	},
-	'getTimeTwo': function(tuples, numOfQueries, net) {
+	'getSqlRisExTime': function(tuples, numOfQueries, net) {
 		var queryStr = 'SELECT * FROM q2quakes WHERE net = ? ORDER BY RAND() LIMIT ' + tuples;
 		var startTime = new Date();
 		
@@ -81,7 +80,7 @@ Meteor.methods({
 					fut.return(results);
 				} else {
 					console.log(error);
-					return 'error';
+					fut.return([]);
 				}
 			});
 			
@@ -91,7 +90,7 @@ Meteor.methods({
 		var endTime = new Date();
 		return endTime - startTime;
 	},
-	'getTimeThree': function(tuples, numOfQueries) {
+	'getRedisExTime': function(tuples, numOfQueries) {
 		var cursor = Math.floor(Date.now()/1000);
 		var match = '*';
 		var startTime = new Date();
@@ -99,8 +98,8 @@ Meteor.methods({
 		for (i=0; i<numOfQueries; i++) {
 			var fut = new Future();
 			
-			var scanStream = redisClient.scan(cursor.toString(), 'MATCH',
-					match, 'COUNT', tuples).then(function (result) {
+			redisClient.scan(cursor.toString(), 'MATCH', match,
+					'COUNT', tuples).then(function (result) {
 				var pipeline = redisClient.pipeline();
 				
 				for (j=0; j<result[1].length; j++) {
@@ -119,7 +118,7 @@ Meteor.methods({
 		var endTime = new Date();
 		return endTime - startTime;
 	},
-	'getTimeFour': function(tuples, numOfQueries, net) {
+	'getRedisRisExTime': function(tuples, numOfQueries, net) {
 		var cursor = Math.floor(Date.now()/1000);
 		var match = '*';
 		var startTime = new Date();
@@ -128,8 +127,8 @@ Meteor.methods({
 			var fut = new Future();
 			var count = 0;
 			
-			var scanStream = redisClient.scan(cursor.toString(), 'MATCH',
-					match, 'COUNT', tuples).then(function (result) {
+			redisClient.scan(cursor.toString(), 'MATCH', match,
+					'COUNT', tuples).then(function (result) {
 				var pipeline = redisClient.pipeline();
 				
 				for (j=0; j<result[1].length; j++) {
@@ -153,5 +152,91 @@ Meteor.methods({
 		
 		var endTime = new Date();
 		return endTime - startTime;
+	},
+	'getPopByStateYear': function(state, year) {
+		var queryStr = 'SELECT `' + year + '` FROM q3population INNER JOIN q3statecode '
+			+ 'ON q3population.State = q3statecode.State WHERE `State Code` = ?';
+		
+		var fut = new Future();
+		
+		connection.query(queryStr, state, function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		return data[0][year];
+	},
+	'getCountiesByState': function(state, year) {
+		var queryStr = 'SELECT County FROM q3counties INNER JOIN q3statecode '
+			+ 'ON q3counties.State = q3statecode.State WHERE `State Code` = ?';
+		
+		var fut = new Future();
+		
+		connection.query(queryStr, state, function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		return data;
+	},
+	'getStatesByPopRange': function(year, minPop, maxPop) {
+		var queryStr = 'SELECT State FROM q3population WHERE `' + year + '` >= ? AND `' + year + '` <= ?';
+		
+		var fut = new Future();
+		
+		connection.query(queryStr, [minPop, maxPop], function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		return data;
+	},
+	'getPopCountByYear': function(year) {
+		var queryStr = 'SELECT `' + year + '` FROM q3population';
+		var fut = new Future();
+		
+		connection.query(queryStr, function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		var popCount = {
+			labels: ['Less than 10M', '10M - 20M', 'More than 20M'],
+			count: [0,0,0]
+		};
+		
+		if (data && data.length > 0) {
+			for (i=0; i<data.length; i++) {
+				if (data[i][year] > 0 && data[i][year] < 10000000) {
+					popCount['count'][0]++;
+				} else if (data[i][year] >= 10000000 && data[i][year] <= 20000000) {
+					popCount['count'][1]++;
+				} else if (data[i][year] > 20000000) {
+					popCount['count'][2]++;
+				}
+			}
+		}
+		
+		return popCount;
 	}
 });

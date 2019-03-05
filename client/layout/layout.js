@@ -13,6 +13,12 @@ Template.layout.helpers({
 		case 'assignment3':
 			document.title = 'Assignment 3';
 			return 'Assignment 3';
+		case 'quiz3':
+			document.title = 'Quiz 3';
+			return 'Quiz 3';
+		case 'assignment4':
+			document.title = 'Assignment 4';
+			return 'Assignment 4';
 		}
 	}
 });

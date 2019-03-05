@@ -1,0 +1,50 @@
+<template name="quiz3">
+	<h3>Task 7: Show Population by State and Year</h3>
+	<br>
+	<form class="getPopByStateYear">
+		<div class="form-group">
+			<label for="state">State:</label>
+			<input type="text" name="state" id="state" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="year">Year:</label>
+			<input type="text" name="year" id="year" class="form-control" />
+		</div>
+		<input type="submit" value="Get Population" class="btn btn-primary" />
+	</form>
+	<br>
+	<span>Population: {{#if population}} {{population}} {{/if}}</span>
+	<hr>
+	<h3>Task 8: Show Counties by State</h3>
+	<br>
+	<form class="getCountiesByState">
+		<div class="form-group">
+			<label for="state2">State:</label>
+			<input type="text" name="state" id="state2" class="form-control" />
+		</div>
+		<input type="submit" value="Get Counties" class="btn btn-primary" />
+	</form>
+	<br>
+	<span>Count: {{#if countyCount}} {{countyCount}} {{/if}}</span>
+	{{#if counties}} {{#each counties}} <br> {{County}} {{/each}} {{/if}}
+	<hr>
+	<h3>Task 9: Show States Within Popupation Range</h3>
+	<br>
+	<form class="getStatesByPopRange">
+		<div class="form-group">
+			<label for="year2">Year:</label>
+			<input type="text" name="year" id="year2" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="minPop">Minimum Population:</label>
+			<input type="text" name="minPop" id="minPop" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="maxPop">Maximum Population:</label>
+			<input type="text" name="maxPop" id="maxPop" class="form-control" />
+		</div>
+		<input type="submit" value="Get States" class="btn btn-primary" />
+	</form>
+	<br>
+	<span>States: {{#if states}} {{#each states}} <br> {{State}} {{/each}} {{/if}}</span>
+</template>
