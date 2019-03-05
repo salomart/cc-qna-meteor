@@ -313,5 +313,38 @@ Meteor.methods({
 		
 		var data = fut.wait();
 		return data;
+	},
+	'getPopCountByYear': function(year) {
+		var queryStr = 'SELECT `' + year + '` FROM q3population';
+		var fut = new Future();
+		
+		connection.query(queryStr, function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		var popCount = {
+			labels: ['Less than 10M', '10M - 20M', 'More than 20M'],
+			count: [0,0,0]
+		};
+		
+		if (data && data.length > 0) {
+			for (i=0; i<data.length; i++) {
+				if (data[i][year] > 0 && data[i][year] < 10000000) {
+					popCount['count'][0]++;
+				} else if (data[i][year] >= 10000000 && data[i][year] <= 20000000) {
+					popCount['count'][1]++;
+				} else if (data[i][year] > 20000000) {
+					popCount['count'][2]++;
+				}
+			}
+		}
+		
+		return popCount;
 	}
 });

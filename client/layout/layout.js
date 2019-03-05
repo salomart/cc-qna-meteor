@@ -16,6 +16,9 @@ Template.layout.helpers({
 		case 'quiz3':
 			document.title = 'Quiz 3';
 			return 'Quiz 3';
+		case 'assignment4':
+			document.title = 'Assignment 4';
+			return 'Assignment 4';
 		}
 	}
 });
