@@ -71,7 +71,7 @@ Template.quiz3.events({
 				}
 			});
 		}
-	},
+	}/*,
 	'submit .q3task1': function(event) {
 		event.preventDefault();
 		
@@ -143,5 +143,5 @@ Template.quiz3.events({
 				}
 			});
 		}
-	}
+	}*/
 });
