@@ -1,23 +1,43 @@
 <template name="assignment4">
-	<h3>Task 1: Populate Bar Chart with Population</h3>
+	<h3>Task 1: Populate Charts with Population</h3>
 	<br>
-	<form class="getPopCount">
+	<form class="getPopCountByYear">
 		<div class="form-group">
-			<label for="year">Year:</label>
+			<label for="year">Year 1:</label>
 			<input type="text" name="year" id="year" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="year2">Year 2:</label>
+			<input type="text" name="year2" id="year2" class="form-control" />
 		</div>
 		<input type="submit" value="Get Population" class="btn btn-primary" />
 	</form>
 	<br>
+	<h4 class="text-center">State Populations (Line)</h4>
+	<div id="popLineChartDiv"></div>
+	<br><br>
 	<h4 class="text-center">State Populations (Bar)</h4>
 	<div id="popBarChartDiv"></div>
+	<br><br>
+	<h4 class="text-center">State Populations (Line & Bar)</h4>
+	<div id="popLineBarChartDiv"></div>
 	<br><br>
 	<h4 class="text-center">State Populations (Horizontal Bar)</h4>
 	<div id="popHorizontalBarChartDiv"></div>
 	<br><br>
 	<h4 class="text-center">State Populations (Pie)</h4>
 	<div id="popPieChartDiv"></div>
-	<br><br>
-	<h4 class="text-center">State Populations (Scatter)</h4>
+	<hr>
+	<h3>Task 2: Populate Scatter Plot with Population and Counties</h3>
+	<br>
+	<form class="getPopAndCountiesByYear">
+		<div class="form-group">
+			<label for="year3">Year:</label>
+			<input type="text" name="year" id="year3" class="form-control" />
+		</div>
+		<input type="submit" value="Get Population" class="btn btn-primary" />
+	</form>
+	<br>
+	<h4 class="text-center">State Populations vs Counties (Scatter)</h4>
 	<div id="popScatterPlotDiv"></div>
 </template>

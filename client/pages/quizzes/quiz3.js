@@ -4,7 +4,7 @@ var states = new ReactiveVar([]);
 
 Template.quiz3.helpers({
 	'population': function() {
-		return population.get();
+		return population.get().toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 	},
 	'countyCount': function() {
 		return counties.get().length;

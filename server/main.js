@@ -1,5 +1,4 @@
-Future = Npm.require('fibers/future');
-
+var Future = Npm.require('fibers/future');
 var mysql = require('mysql');
 var redis = require('ioredis');
 
@@ -206,8 +205,8 @@ Meteor.methods({
 		var data = fut.wait();
 		return data;
 	},
-	'getPopCountByYear': function(year) {
-		var queryStr = 'SELECT `' + year + '` FROM q3population';
+	'getPopCountByYear': function(year, year2) {
+		var queryStr = 'SELECT `' + year + '`, `' + year2 + '` FROM q3population';
 		var fut = new Future();
 		
 		connection.query(queryStr, function (error, results, fields) {
@@ -224,6 +223,10 @@ Meteor.methods({
 			labels: ['Less than 10M', '10M - 20M', 'More than 20M'],
 			count: [0,0,0]
 		};
+		var popCount2 = {
+			labels: ['Less than 10M', '10M - 20M', 'More than 20M'],
+			count: [0,0,0]
+		};
 		
 		if (data && data.length > 0) {
 			for (i=0; i<data.length; i++) {
@@ -234,9 +237,47 @@ Meteor.methods({
 				} else if (data[i][year] > 20000000) {
 					popCount['count'][2]++;
 				}
+				
+				if (data[i][year2] > 0 && data[i][year2] < 10000000) {
+					popCount2['count'][0]++;
+				} else if (data[i][year2] >= 10000000 && data[i][year2] <= 20000000) {
+					popCount2['count'][1]++;
+				} else if (data[i][year2] > 20000000) {
+					popCount2['count'][2]++;
+				}
 			}
 		}
 		
-		return popCount;
+		return [popCount, popCount2, year, year2];
+	},
+	'getPopAndCountiesByYear': function(year) {
+		var queryStr = 'SELECT q3counties.State, `' + year + '`, COUNT(*) AS `counties` FROM q3population '
+		+ 'INNER JOIN q3counties ON q3population.State = q3counties.State GROUP BY q3counties.State';
+		var fut = new Future();
+		
+		connection.query(queryStr, function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		var points = [];
+		var stateNames = [];
+		
+		if (data && data.length > 0) {
+			for (i=0; i<data.length; i++) {
+				let newObj = {};
+				newObj.x = data[i][year];
+				newObj.y = data[i]['counties'];
+				points.push(newObj);
+				stateNames.push(data[i]['State']);
+			}
+		}
+		
+		return {points: points, labels: stateNames};
 	}
 });

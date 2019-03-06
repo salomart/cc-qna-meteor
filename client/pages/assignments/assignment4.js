@@ -7,16 +7,49 @@ var barChartOptions = {
 		xAxes: [{
 			ticks: {
 				beginAtZero: true
+			},
+			scaleLabel: {
+				display: true,
+				labelString: 'Population'
 			}
 		}],
 		yAxes: [{
 			ticks: {
 				beginAtZero: true
+			},
+			scaleLabel: {
+				display: true,
+				labelString: 'No. of States'
 			}
 		}]
 	},
-	tooltips: {
-		mode: 'nearest'
+	legend: {
+		display: false
+	}
+};
+
+var hBarChartOptions = {
+	responsive: true,
+	maintainAspectRatio: false,
+	scales: {
+		xAxes: [{
+			ticks: {
+				beginAtZero: true
+			},
+			scaleLabel: {
+				display: true,
+				labelString: 'No. of States'
+			}
+		}],
+		yAxes: [{
+			ticks: {
+				beginAtZero: true
+			},
+			scaleLabel: {
+				display: true,
+				labelString: 'Population'
+			}
+		}]
 	},
 	legend: {
 		display: false
@@ -26,32 +59,62 @@ var barChartOptions = {
 var pieChartOptions = {
 	responsive: true,
 	maintainAspectRatio: false,
+	cutoutPercentage: 0,
 	tooltips: {
-		mode: 'nearest'
-	},
-	cutoutPercentage: 0
-};
-
-var popCount = new ReactiveVar({
-	labels: ['Less than 10M', '10M - 20M', 'More than 20M'],
-	count: [0,0,0]
-});
-
-var scatterData = function(data) {
-	let newData = []
-	if (data.length > 0) {
-		for (i=0; i<data.length; i++) {
-			let obj = {
-				x: i+1,
-				y: data[i]
+		callbacks: {
+			label: function(tooltipItem, data) {
+				var label = data.datasets[tooltipItem.datasetIndex].label;
+				return label + ': ' + data.labels[tooltipItem.index];
 			}
-			
-			newData.push(obj);
 		}
 	}
-	
-	return newData;
 };
+
+var scatterPlotOptions = {
+	responsive: true,
+	maintainAspectRatio: false,
+	scales: {
+		xAxes: [{
+			ticks: {
+				beginAtZero: true
+			},
+			scaleLabel: {
+				display: true,
+				labelString: 'Population'
+			}
+		}],
+		yAxes: [{
+			ticks: {
+				beginAtZero: true
+			},
+			scaleLabel: {
+				display: true,
+				labelString: 'Counties'
+			}
+		}]
+	},
+	tooltips: {
+		callbacks: {
+			label: function(tooltipItem, data) {
+				var label = data.labels[tooltipItem.index];
+				return label + '(' + tooltipItem.xLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ', ' + tooltipItem.yLabel + ')';
+			}
+		}
+	},
+	legend: {
+		display: false
+	}
+};
+
+var popCount = new ReactiveVar([{
+	labels: [],
+	count: []
+},{
+	labels: [],
+	count: []
+},0,0]);
+
+var popAndCountyCount = new ReactiveVar([]);
 
 var backgroundColors = [
 	'rgba(255, 99, 132, 0.2)',
@@ -66,6 +129,43 @@ var borderColors = [
 ];
 
 Template.assignment4.onRendered(function () {
+	Tracker.autorun(() => {
+		let chartDiv = document.getElementById('popLineChartDiv');
+		
+		while (chartDiv.lastChild) {
+			chartDiv.removeChild(chartDiv.lastChild);
+		}
+		
+		let ctx = 'popLineChart';
+		
+		let node = document.createElement('canvas');
+		node.id = ctx;
+		node.style.width = '400px';
+		node.style.height = '400px';
+		chartDiv.appendChild(node);
+		
+		var popBarChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: popCount.get()[0]['labels'],
+				datasets: [{
+					label: 'Population Count',
+					data: popCount.get()[0]['count'],
+					fill: false,
+					borderColor: borderColors[0],
+					borderWidth: 1
+				},{
+					label: 'Population Count',
+					data: popCount.get()[1]['count'],
+					fill: false,
+					borderColor: borderColors[1],
+					borderWidth: 1
+				}]
+			},
+			options: barChartOptions
+		});
+	});
+	
 	Tracker.autorun(() => {
 		let chartDiv = document.getElementById('popBarChartDiv');
 		
@@ -84,13 +184,57 @@ Template.assignment4.onRendered(function () {
 		var popBarChart = new Chart(ctx, {
 			type: 'bar',
 			data: {
-				labels: popCount.get()['labels'],
+				labels: popCount.get()[0]['labels'],
 				datasets: [{
 					label: 'Population Count',
-					data: popCount.get()['count'],
-					backgroundColor: backgroundColors,
-					borderColor: borderColors,
+					data: popCount.get()[0]['count'],
+					backgroundColor: backgroundColors[0],
+					borderColor: borderColors[0],
 					borderWidth: 1
+				},{
+					label: 'Population Count',
+					data: popCount.get()[1]['count'],
+					backgroundColor: backgroundColors[1],
+					borderColor: borderColors[1],
+					borderWidth: 1
+				}]
+			},
+			options: barChartOptions
+		});
+	});
+	
+	Tracker.autorun(() => {
+		let chartDiv = document.getElementById('popLineBarChartDiv');
+		
+		while (chartDiv.lastChild) {
+			chartDiv.removeChild(chartDiv.lastChild);
+		}
+		
+		let ctx = 'popLineBarChart';
+		
+		let node = document.createElement('canvas');
+		node.id = ctx;
+		node.style.width = '400px';
+		node.style.height = '400px';
+		chartDiv.appendChild(node);
+		
+		var popBarChart = new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: popCount.get()[0]['labels'],
+				datasets: [{
+					label: 'Population Count',
+					data: popCount.get()[0]['count'],
+					backgroundColor: backgroundColors[0],
+					borderColor: borderColors[0],
+					borderWidth: 1
+				},{
+					label: 'Population Count',
+					data: popCount.get()[1]['count'],
+					borderColor: borderColors[1],
+					borderWidth: 1,
+					type: 'line',
+					fill: false,
 				}]
 			},
 			options: barChartOptions
@@ -115,16 +259,16 @@ Template.assignment4.onRendered(function () {
 		var popHorizontalBarChart = new Chart(ctx, {
 			type: 'horizontalBar',
 			data: {
-				labels: popCount.get()['labels'],
+				labels: popCount.get()[0]['labels'],
 				datasets: [{
 					label: 'Population Count',
-					data: popCount.get()['count'],
+					data: popCount.get()[0]['count'],
 					backgroundColor: backgroundColors,
 					borderColor: borderColors,
 					borderWidth: 1
 				}]
 			},
-			options: barChartOptions
+			options: hBarChartOptions
 		});
 	});
 	
@@ -146,10 +290,16 @@ Template.assignment4.onRendered(function () {
 		var popPieChart = new Chart(ctx, {
 			type: 'pie',
 			data: {
-				labels: popCount.get()['labels'],
+				labels: popCount.get()[0]['labels'],
 				datasets: [{
-					label: 'Population Count',
-					data: popCount.get()['count'],
+					label: popCount.get()[2],
+					data: popCount.get()[0]['count'],
+					backgroundColor: backgroundColors,
+					borderColor: borderColors,
+					borderWidth: 1
+				},{
+					label: popCount.get()[3],
+					data: popCount.get()[1]['count'],
 					backgroundColor: backgroundColors,
 					borderColor: borderColors,
 					borderWidth: 1
@@ -177,29 +327,41 @@ Template.assignment4.onRendered(function () {
 		var popScatterPlot = new Chart(ctx, {
 			type: 'scatter',
 			data: {
-				labels: popCount.get()['labels'],
+				labels: popAndCountyCount.get()['labels'],
 				datasets: [{
 					label: 'Population Count',
-					data: scatterData(popCount.get()['count']),
-					backgroundColor: backgroundColors,
-					borderColor: borderColors,
+					data: popAndCountyCount.get()['points'],
+					backgroundColor: backgroundColors[0],
+					borderColor: borderColors[0],
 					borderWidth: 1
 				}]
 			},
-			options: barChartOptions
+			options: scatterPlotOptions
 		});
 	});
 });
 
 Template.assignment4.events({
-	'submit .getPopCount': function(event) {
+	'submit .getPopCountByYear': function(event) {
+		event.preventDefault();
+		
+		var year = event.target.year.value;
+		var year2 = event.target.year2.value;
+		
+		Meteor.call('getPopCountByYear', year, year2, function(error, result) {
+			if (!error) {
+				popCount.set(result);
+			}
+		});
+	},
+	'submit .getPopAndCountiesByYear': function(event) {
 		event.preventDefault();
 		
 		var year = event.target.year.value;
 		
-		Meteor.call('getPopCountByYear', year, function(error, result) {
+		Meteor.call('getPopAndCountiesByYear', year, function(error, result) {
 			if (!error) {
-				popCount.set(result);
+				popAndCountyCount.set(result);
 			}
 		});
 	}
