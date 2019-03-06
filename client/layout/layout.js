@@ -19,6 +19,9 @@ Template.layout.helpers({
 		case 'assignment4':
 			document.title = 'Assignment 4';
 			return 'Assignment 4';
+		case 'quiz4':
+			document.title = 'Quiz 4';
+			return 'Quiz 4';
 		}
 	}
 });

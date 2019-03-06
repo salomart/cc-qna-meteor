@@ -26,9 +26,6 @@ var redisClient = new redis({
 	db: 0
 });
 
-Meteor.startup(() => {
-});
-
 Meteor.methods({
 	'getMagsByRangeAndNet': function(lowestMag, highestMag, net) {
 		var fut = new Future();
