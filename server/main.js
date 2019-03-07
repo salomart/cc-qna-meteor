@@ -276,5 +276,75 @@ Meteor.methods({
 		}
 		
 		return {points: points, labels: stateNames};
+	},
+	'getPopCountByYearRanges': function(year, range1, range2, range3) {
+		var queryStr = 'SELECT `' + year + '` FROM q3population';
+		var fut = new Future();
+		var range1Arr = range1.split("-");
+		var range2Arr = range2.split("-");
+		var range3Arr = range3.split("-");
+		
+		connection.query(queryStr, function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		var popCount = [{name: 'Range1', count: 0},{name: 'Range2', count: 0},{name: 'Range3', count: 0}];
+		var labels = ['Range1', 'Range2', 'Range3'];
+		var counts = [0,0,0];
+		
+		if (data && data.length > 0) {
+			for (i=0; i<data.length; i++) {
+				if (data[i][year] > Number(range1Arr[0]) * 1000000 && data[i][year] < Number(range1Arr[1]) * 1000000) {
+					popCount[0]['count']++;
+					counts[0]++;
+				}
+				if (data[i][year] > Number(range2Arr[0]) * 1000000 && data[i][year] < Number(range2Arr[1]) * 1000000) {
+					popCount[1]['count']++;
+					counts[1]++;
+				}
+				if (data[i][year] > Number(range3Arr[0]) * 1000000 && data[i][year] < Number(range3Arr[1]) * 1000000) {
+					popCount[2]['count']++;
+					counts[2]++;
+				}
+			}
+		}
+		
+		return [popCount,labels,counts];
+	},
+	'getScatterData': function(letterCode, year) {
+		var yearArr = year.split("-");
+		var queryStr = 'SELECT Year, BLPercent FROM q4educationshare WHERE Year > ? AND Year < ? AND Code = ?';
+		var fut = new Future();
+		
+		connection.query(queryStr, [Number(yearArr[0]), Number(yearArr[1]), letterCode], function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		var points = [];
+		var pointNames = [];
+		
+		if (data && data.length > 0) {
+			for (i=0; i<data.length; i++) {
+				let newObj = {};
+				newObj.x = data[i]['Year'];
+				newObj.y = data[i]['BLPercent'];
+				points.push(newObj);
+				pointNames.push('Point');
+			}
+		}
+		
+		return {points: points, labels: pointNames};
 	}
 });

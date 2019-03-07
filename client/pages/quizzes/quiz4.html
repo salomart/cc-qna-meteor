@@ -1,2 +1,50 @@
 <template name="quiz4">
+	<h3>Task 7: Show Count For Population Ranges</h3>
+	<br>
+	<form class="getPopCountByYearRanges">
+		<div class="form-group">
+			<label for="year">Year:</label>
+			<input type="text" name="year" id="year" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="range1">Range 1:</label>
+			<input type="text" name="range1" id="range1" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="range2">Range 2:</label>
+			<input type="text" name="range2" id="range2" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="range3">Range 3:</label>
+			<input type="text" name="range3" id="range3" class="form-control" />
+		</div>
+		<input type="submit" value="Get Population Counts" class="btn btn-primary" />
+	</form>
+	{{#if popCount}}
+		{{#each popCount}}
+			<br>{{name}}: {{count}}
+		{{/each}}
+	{{/if}}
+	<hr>
+	<h3>Task 8: Show Count For Population Ranges (Pie)</h3>
+	<br><br>
+	<h4 class="text-center">State Populations (Pie)</h4>
+	<div id="popPieChartDiv"></div>
+	<hr>
+	<h3>Task 9: Show Scatter Plot</h3>
+	<br>
+	<form class="getScatterData">
+		<div class="form-group">
+			<label for="letterCode">Letter Code:</label>
+			<input type="text" name="letterCode" id="letterCode" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="year2">Year Range:</label>
+			<input type="text" name="year" id="year2" class="form-control" />
+		</div>
+		<input type="submit" value="Populate Scatter Plot" class="btn btn-primary" />
+	</form>
+	<br><br>
+	<h4 class="text-center">Scatter Plot</h4>
+	<div id="popScatterPlotDiv"></div>
 </template>
