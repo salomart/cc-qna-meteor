@@ -1,0 +1,9 @@
+{
+  "name": "CC-QNA",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {},
+  "scripts": {
+    "start": "export ROOT_URL='http://cc-qna.us-east-2.elasticbeanstalk.com/' && node main.js"
+  }
+}
