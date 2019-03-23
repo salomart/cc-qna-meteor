@@ -18,13 +18,13 @@ var closeAndExit = function() {
 process.on('SIGTERM', closeAndExit);
 process.on('SIGINT', closeAndExit);
 
-var redisClient = new redis({
+/* var redisClient = new redis({
 	port: 6379,
 	host: 'cc-qna.redis.cache.windows.net',
 	family: 4,
 	password: '4p+V+Q7mWu2t5Rsdm7rRhJeENfC+2Z4aNTiMlPUnLio=',
 	db: 0
-});
+}); */
 
 Meteor.methods({
 	'getMagsByRangeAndNet': function(lowestMag, highestMag, net) {
