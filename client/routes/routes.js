@@ -12,6 +12,8 @@ import '/client/pages/assignments/assignment4.html';
 import '/client/pages/assignments/assignment4';
 import '/client/pages/quizzes/quiz4.html';
 import '/client/pages/quizzes/quiz4';
+import '/client/pages/assignments/assignment5.html';
+import '/client/pages/assignments/assignment5';
 
 Router.configure({
 	layoutTemplate: 'layout'
@@ -39,4 +41,8 @@ Router.route('/assignment4', function () {
 
 Router.route('/quiz4', function () {
 	this.render('quiz4');
+});
+
+Router.route('/assignment5', function () {
+	this.render('assignment5');
 });

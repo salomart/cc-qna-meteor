@@ -22,6 +22,9 @@ Template.layout.helpers({
 		case 'quiz4':
 			document.title = 'Quiz 4';
 			return 'Quiz 4';
+		case 'assignment5':
+			document.title = 'Assignment 5';
+			return 'Assignment 5';
 		}
 	}
 });
