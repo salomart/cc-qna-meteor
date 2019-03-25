@@ -1,2 +1,47 @@
 <template name="quiz5">
+	<h3>Task 7a: Find 7 clusters based on Age and Fare</h3>
+	{{#if result7Clusters}}
+		Time to run: {{result7ClustersTime}}ms
+		<br><br>
+		<table class="table table-striped" style="border-bottom: 1px solid #dee2e6;">
+			<tbody>
+				<tr>
+					<th>Cluster</th>
+					<th>Number of Points</th>
+					<th>Centroid</th>
+				</tr>
+				{{#each result7Clusters}}
+					<tr>
+						<td>{{index}}</td>
+						<td>{{clusterLength}}</td>
+						<td>({{centroid}})</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		<br>
+	{{else}} No Data!<br><br>{{/if}}
+	<hr>
+	<h3>Task 7b: Find 9 clusters based on DeckLevel and Fare</h3>
+	{{#if result9Clusters}}
+		Time to run: {{result9ClustersTime}}ms
+		<br><br>
+		<table class="table table-striped" style="border-bottom: 1px solid #dee2e6;">
+			<tbody>
+				<tr>
+					<th>Cluster</th>
+					<th>Number of Points</th>
+					<th>Centroid</th>
+				</tr>
+				{{#each result9Clusters}}
+					<tr>
+						<td>{{index}}</td>
+						<td>{{clusterLength}}</td>
+						<td>({{centroid}})</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		<br>
+	{{else}} No Data!<br><br>{{/if}}
 </template>

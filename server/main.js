@@ -430,5 +430,83 @@ Meteor.methods({
 		
 		data.unshift(centroids);
 		return data;
+	},
+	'get7And9Clusters': function() {
+		var queryStr = 'SELECT Age, Fare FROM q5minnow';
+		var queryStr2 = 'SELECT CabinNum, Fare FROM q5minnow';
+		var result = [];
+		var fut = new Future();
+		
+		var startTime1 = new Date();
+		
+		connection.query(queryStr, function (error, results, fields) {
+			if (!error) {
+				let vectors = [];
+				
+				for (i=0; i<results.length; i++) {
+					let sample = [results[i]['Age'], results[i]['Fare']];
+					vectors[i] = sample;
+				}
+				
+				kmeans.clusterize(vectors, {k: parseInt(7)}, (err, res) => {
+					if (err) {
+						console.error(err);
+						fut.return([]);
+					} else {
+						fut.return(res);
+					}
+				});
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		var endTime1 = new Date();
+		
+		for (i=0; i<data.length; i++) {
+			data[i]['index'] = i + 1;
+		}
+		
+		result.push(data);
+		result.push(endTime1 - startTime1);
+		fut = new Future();
+		var startTime2 = new Date();
+		
+		connection.query(queryStr2, function (error, results, fields) {
+			if (!error) {
+				let vectors = [];
+				
+				for (i=0; i<results.length; i++) {
+					let sample = [parseInt(results[i]['CabinNum'] / 100.0), results[i]['Fare']];
+					vectors[i] = sample;
+				}
+				
+				kmeans.clusterize(vectors, {k: parseInt(9)}, (err, res) => {
+					if (err) {
+						console.error(err);
+						fut.return([]);
+					} else {
+						fut.return(res);
+					}
+				});
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		data = fut.wait();
+		var endTime2 = new Date();
+		
+		for (i=0; i<data.length; i++) {
+			data[i]['index'] = i + 1;
+		}
+		
+		result.push(data);
+		result.push(endTime2 - startTime2);
+		
+		return result;
 	}
 });
