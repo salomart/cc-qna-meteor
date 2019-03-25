@@ -292,9 +292,9 @@ Meteor.methods({
 	'getPopCountByYearRanges': function(year, range1, range2, range3) {
 		var queryStr = 'SELECT `' + year + '` FROM q3population';
 		var fut = new Future();
-		var range1Arr = range1.split("-");
-		var range2Arr = range2.split("-");
-		var range3Arr = range3.split("-");
+		var range1Arr = range1.split('-');
+		var range2Arr = range2.split('-');
+		var range3Arr = range3.split('-');
 		
 		connection.query(queryStr, function (error, results, fields) {
 			if (!error) {
@@ -330,7 +330,7 @@ Meteor.methods({
 		return [popCount,labels,counts];
 	},
 	'getScatterData': function(letterCode, year) {
-		var yearArr = year.split("-");
+		var yearArr = year.split('-');
 		var queryStr = 'SELECT Year, BLPercent FROM q4educationshare WHERE Year > ? AND Year < ? AND Code = ?';
 		var fut = new Future();
 		
