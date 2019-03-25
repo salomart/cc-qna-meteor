@@ -12,4 +12,57 @@
 		</div>
 		<input type="submit" value="Get Clusters" class="btn btn-primary" />
 	</form>
+	<br>
+	Cluster Results:
+	{{#if resultClusters}}
+		<br><br>
+		<table class="table table-striped" style="border-bottom: 1px solid #dee2e6;">
+			<tbody>
+				<tr>
+					<th>Cluster</th>
+					<th>Number of Points</th>
+					<th>Centroid</th>
+					<th>Standard Deviation</th>
+				</tr>
+				{{#each resultClusters}}
+					{{#if showInTable}}
+						<tr>
+							<td>{{index}}</td>
+							<td>{{clusterLength}}</td>
+							<td>({{centroid}})</td>
+							<td>{{stdDev}}</td>
+						</tr>
+					{{/if}}
+				{{/each}}
+			</tbody>
+		</table>
+		<br>
+	{{else}} No Data!<br><br>{{/if}}
+	<h4 class="text-center">Scatter Plot</h4>
+	<div id="titanicScatterPlotDiv"></div>
+	{{#if resultClusters}}
+		<hr>
+		<h3>Task 2: Get Distance From Two Points</h3>
+		<br>
+		Selected Points: {{selectedPoints}}
+		<br>
+		Distance: {{selectedPointsDist}}
+		<br>
+		<hr>
+		<h3>Task 3: Get Distance From Two Centroids</h3>
+		<br>
+		<form class="getDistOfCentroids">
+			<div class="form-group">
+				<label for="centroidOne">Cluster of Centroid 1:</label>
+				<input type="text" name="centroidOne" id="centroidOne" class="form-control" />
+			</div>
+			<div class="form-group">
+				<label for="centroidTwo">Cluster of Centroid 2:</label>
+				<input type="text" name="centroidTwo" id="centroidTwo" class="form-control" />
+			</div>
+			<input type="submit" value="Get Distance" class="btn btn-primary" />
+		</form>
+		<br>
+		Distance: {{selectedCentroidsDist}}
+	{{/if}}
 </template>

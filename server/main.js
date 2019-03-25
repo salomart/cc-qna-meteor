@@ -1,6 +1,7 @@
 var Future = Npm.require('fibers/future');
 var mysql = require('mysql');
 var redis = require('ioredis');
+var kmeans = require('node-kmeans');
 
 var connection = mysql.createConnection({
 	host: 'cse-6331-db.c72x8ipqq7oz.us-east-2.rds.amazonaws.com',
@@ -25,6 +26,17 @@ process.on('SIGINT', closeAndExit);
 	password: '4p+V+Q7mWu2t5Rsdm7rRhJeENfC+2Z4aNTiMlPUnLio=',
 	db: 0
 }); */
+
+var getRandomColor = function() {
+	var letters = '0123456789ABCDEF';
+	var color = '#';
+	
+	for (var i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	
+	return color;
+}
 
 Meteor.methods({
 	'getMagsByRangeAndNet': function(lowestMag, highestMag, net) {
@@ -280,9 +292,9 @@ Meteor.methods({
 	'getPopCountByYearRanges': function(year, range1, range2, range3) {
 		var queryStr = 'SELECT `' + year + '` FROM q3population';
 		var fut = new Future();
-		var range1Arr = range1.split("-");
-		var range2Arr = range2.split("-");
-		var range3Arr = range3.split("-");
+		var range1Arr = range1.split('-');
+		var range2Arr = range2.split('-');
+		var range3Arr = range3.split('-');
 		
 		connection.query(queryStr, function (error, results, fields) {
 			if (!error) {
@@ -318,7 +330,7 @@ Meteor.methods({
 		return [popCount,labels,counts];
 	},
 	'getScatterData': function(letterCode, year) {
-		var yearArr = year.split("-");
+		var yearArr = year.split('-');
 		var queryStr = 'SELECT Year, BLPercent FROM q4educationshare WHERE Year > ? AND Year < ? AND Code = ?';
 		var fut = new Future();
 		
@@ -346,5 +358,77 @@ Meteor.methods({
 		}
 		
 		return {points: points, labels: pointNames};
+	},
+	'getClustersByNumAttrs': function(clusters, attrArr) {
+		var queryStr = 'SELECT ' + attrArr[0] + ', ' + attrArr[1] + ' FROM a5titanic';
+		var fut = new Future();
+		
+		connection.query(queryStr, function (error, results, fields) {
+			if (!error) {
+				let vectors = [];
+				
+				for (i=0; i<results.length; i++) {
+					let sample = [results[i][attrArr[0]], results[i][attrArr[1]]];
+					vectors[i] = sample;
+				}
+				
+				kmeans.clusterize(vectors, {k: parseInt(clusters)}, (err, res) => {
+					if (err) {
+						console.error(err);
+						fut.return([]);
+					} else {
+						fut.return(res);
+					}
+				});
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		
+		var centroids = {
+			label: 'Cluster Centroid',
+			data: [],
+			backgroundColor: 'white',
+			borderColor: 'black',
+			borderWidth: 3,
+			showInTable: false
+		}
+		
+		for (i=0; i<data.length; i++) {
+			let points = [];
+			let randomColor = getRandomColor();
+			let stdDev = 0;
+			
+			for (j=0; j<data[i]['cluster'].length; j++) {
+				let newObj = {};
+				newObj.x = data[i]['cluster'][j][0];
+				newObj.y = data[i]['cluster'][j][1];
+				points.push(newObj);
+				
+				stdDev = stdDev + Math.pow((data[i]['cluster'][j][0] - data[i]['centroid'][0]), 2);
+				stdDev = stdDev + Math.pow((data[i]['cluster'][j][1] - data[i]['centroid'][1]), 2);
+			}
+			
+			stdDev = stdDev / (data[i]['cluster'].length - 1);
+			stdDev = Math.pow(stdDev, 0.5);
+			
+			data[i]['index'] = i + 1;
+			data[i]['stdDev'] = stdDev;
+			
+			data[i]['label'] = 'Cluster ' + data[i]['index'];
+			data[i]['data'] = points;
+			data[i]['backgroundColor'] = randomColor;
+			data[i]['borderColor'] = randomColor;
+			data[i]['borderWidth'] = 1;
+			data[i]['showInTable'] = true;
+			
+			centroids.data.push({x: data[i]['centroid'][0], y: data[i]['centroid'][1]});
+		}
+		
+		data.unshift(centroids);
+		return data;
 	}
 });
