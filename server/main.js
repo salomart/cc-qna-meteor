@@ -539,25 +539,22 @@ Meteor.methods({
 		var data = fut.wait();
 		
 		for (i=0; i<data.length; i++) {
-			/* let points = [];
-			let randomColor = getRandomColor();
-			let stdDev = 0;
+			let maxDist = 0;
 			
 			for (j=0; j<data[i]['cluster'].length; j++) {
-				let newObj = {};
-				newObj.x = data[i]['cluster'][j][0];
-				newObj.y = data[i]['cluster'][j][1];
-				points.push(newObj);
-				
-				stdDev = stdDev + Math.pow((data[i]['cluster'][j][0] - data[i]['centroid'][0]), 2);
-				stdDev = stdDev + Math.pow((data[i]['cluster'][j][1] - data[i]['centroid'][1]), 2);
+				for (k=0; k<data[i]['cluster'].length; k++) {
+					let pointOne = data[i]['cluster'][j];
+					let pointTwo = data[i]['cluster'][k];
+					distance = Math.hypot(pointOne[0] - pointTwo[0], pointOne[1] - pointTwo[1]);
+					
+					if (distance > maxDist) {
+						maxDist = distance;
+					}
+				}
 			}
 			
-			stdDev = stdDev / (data[i]['cluster'].length - 1);
-			stdDev = Math.pow(stdDev, 0.5);*/
-			
 			data[i]['index'] = i + 1;
-			// data[i]['stdDev'] = stdDev;
+			data[i]['maxDist'] = maxDist;
 		}
 		
 		return data;

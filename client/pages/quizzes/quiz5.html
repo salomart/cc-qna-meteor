@@ -66,12 +66,14 @@
 					<th>Cluster</th>
 					<th>Number of Points</th>
 					<th>Centroid</th>
+					<th>Max Distance</th>
 				</tr>
 				{{#each resultClusters}}
 					<tr>
 						<td>{{index}}</td>
 						<td>{{clusterLength}}</td>
 						<td>({{centroid}})</td>
+						<td>{{maxDist}}</td>
 					</tr>
 				{{/each}}
 			</tbody>
