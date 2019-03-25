@@ -508,5 +508,58 @@ Meteor.methods({
 		result.push(endTime2 - startTime2);
 		
 		return result;
+	},
+	'getClustersByNumAttrsMinnow': function(clusters, attrArr) {
+		var queryStr = 'SELECT ' + attrArr[0] + ', ' + attrArr[1] + ' FROM q5minnow';
+		var fut = new Future();
+		
+		connection.query(queryStr, function (error, results, fields) {
+			if (!error) {
+				let vectors = [];
+				
+				for (i=0; i<results.length; i++) {
+					let sample = [results[i][attrArr[0]], results[i][attrArr[1]]];
+					vectors[i] = sample;
+				}
+				
+				kmeans.clusterize(vectors, {k: parseInt(clusters)}, (err, res) => {
+					if (err) {
+						console.error(err);
+						fut.return([]);
+					} else {
+						fut.return(res);
+					}
+				});
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		
+		for (i=0; i<data.length; i++) {
+			/* let points = [];
+			let randomColor = getRandomColor();
+			let stdDev = 0;
+			
+			for (j=0; j<data[i]['cluster'].length; j++) {
+				let newObj = {};
+				newObj.x = data[i]['cluster'][j][0];
+				newObj.y = data[i]['cluster'][j][1];
+				points.push(newObj);
+				
+				stdDev = stdDev + Math.pow((data[i]['cluster'][j][0] - data[i]['centroid'][0]), 2);
+				stdDev = stdDev + Math.pow((data[i]['cluster'][j][1] - data[i]['centroid'][1]), 2);
+			}
+			
+			stdDev = stdDev / (data[i]['cluster'].length - 1);
+			stdDev = Math.pow(stdDev, 0.5);*/
+			
+			data[i]['index'] = i + 1;
+			// data[i]['stdDev'] = stdDev;
+		}
+		
+		return data;
 	}
 });
