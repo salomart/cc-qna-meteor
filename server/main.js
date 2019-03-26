@@ -436,7 +436,6 @@ Meteor.methods({
 		var queryStr2 = 'SELECT CabinNum, Fare FROM q5minnow';
 		var result = [];
 		var fut = new Future();
-		
 		var startTime1 = new Date();
 		
 		connection.query(queryStr, function (error, results, fields) {
@@ -506,7 +505,6 @@ Meteor.methods({
 		
 		result.push(data);
 		result.push(endTime2 - startTime2);
-		
 		return result;
 	},
 	'getClustersByNumAttrsMinnow': function(clusters, attrArr) {

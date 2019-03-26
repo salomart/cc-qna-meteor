@@ -42,7 +42,6 @@ Template.quiz5.events({
 		
 		var clusters = event.target.clusters.value;
 		var attributes = event.target.attributes.value;
-		
 		var attrArr = attributes.split(", ");
 		
 		if (attrArr.length == 2) {
