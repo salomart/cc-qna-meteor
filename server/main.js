@@ -556,5 +556,22 @@ Meteor.methods({
 		}
 		
 		return data;
-	}
+	},
+	'getStatesByYearPop': function(year, population) {
+		var queryStr = 'SELECT State FROM q3population WHERE `' + year + '` > ?';
+		
+		var fut = new Future();
+		
+		connection.query(queryStr, population, function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		return data;
+	},
 });
