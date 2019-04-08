@@ -574,4 +574,28 @@ Meteor.methods({
 		var data = fut.wait();
 		return data;
 	},
+	'getStatesByYearRandomPops': function(year, count) {
+		var times = [];
+		for (i=0; i<parseInt(count); i++) {
+			let startTime = new Date();
+			let population = Math.floor((Math.random() * 29000000) + 1000000);
+			let queryStr = 'SELECT State FROM q3population WHERE `' + year + '` > ?';
+			let fut = new Future();
+			
+			connection.query(queryStr, population, function (error, results, fields) {
+				if (!error) {
+					fut.return(results);
+				} else {
+					console.log(error);
+					fut.return([]);
+				}
+			});
+			
+			let data = fut.wait();
+			let endTime = new Date();
+			times.push({time: endTime - startTime});
+		}
+		
+		return times;
+	}
 });

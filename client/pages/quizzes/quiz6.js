@@ -2,6 +2,8 @@
 //var counties = new ReactiveVar([]);
 var states = new ReactiveVar([]);
 var getStatesTime = new ReactiveVar(0);
+var exTimes = new ReactiveVar([]);
+var overallExTime = new ReactiveVar(0);
 
 Template.quiz6.helpers({
 	/*'population': function() {
@@ -18,6 +20,12 @@ Template.quiz6.helpers({
 	},
 	'getStatesTime': function() {
 		return getStatesTime.get();
+	},
+	'exTimes': function() {
+		return exTimes.get();
+	},
+	'overallExTime': function() {
+		return overallExTime.get();
 	}
 });
 
@@ -34,6 +42,21 @@ Template.quiz6.events({
 				states.set(result);
 				var endTime = new Date();
 				getStatesTime.set(endTime - startTime);
+			}
+		});
+	},
+	'submit .getStatesByYearRandomPops': function(event) {
+		event.preventDefault();
+		var startTime = new Date();
+		
+		var year = event.target.year2.value;
+		var count = event.target.exCount.value;
+		
+		Meteor.call('getStatesByYearRandomPops', year, count, function(error, result) {
+			if (!error) {
+				exTimes.set(result);
+				var endTime = new Date();
+				overallExTime.set(endTime - startTime);
 			}
 		});
 	},

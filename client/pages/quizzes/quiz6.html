@@ -1,5 +1,5 @@
 <template name="quiz6">
-	<h3>Task 7: Show States By Year and Population Threshold</h3>
+	<h3>Task 8: Show States By Year and Population Threshold</h3>
 	<br>
 	<form class="getStatesByYearPop">
 		<div class="form-group">
@@ -16,6 +16,24 @@
 	<span>Time Elapsed: {{#if getStatesTime}} {{getStatesTime}}ms {{/if}}</span>
 	<br>
 	<span>States: {{#if states}} {{#each states}} <br> {{State}} {{/each}} {{/if}}</span>
+	<hr>
+	<h3>Task 9: Execute Requests That Perform Queries with Random Populations</h3>
+	<br>
+	<form class="getStatesByYearRandomPops">
+		<div class="form-group">
+			<label for="year2">Year:</label>
+			<input type="text" name="year2" id="year2" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="exCount">Count:</label>
+			<input type="text" name="exCount" id="exCount" class="form-control" />
+		</div>
+		<input type="submit" value="Execute Queries" class="btn btn-primary" />
+	</form>
+	<br>
+	<span>Overall Time Elapsed: {{#if overallExTime}} {{overallExTime}}ms {{/if}}</span>
+	<br>
+	<span>Query Times: {{#if exTimes}} {{#each exTimes}} <br> {{time}}ms {{/each}} {{/if}}</span>
 	<!--<hr>
 	<h3>Task 8: Show Counties by State</h3>
 	<br>
