@@ -1,0 +1,91 @@
+<template name="quiz5">
+	<h3>Task 7a: Find 7 clusters based on Age and Fare</h3>
+	{{#if result7Clusters}}
+		Time to run: {{result7ClustersTime}}ms
+		<br><br>
+		<table class="table table-striped" style="border-bottom: 1px solid #dee2e6;">
+			<tbody>
+				<tr>
+					<th>Cluster</th>
+					<th>Number of Points</th>
+					<th>Centroid</th>
+				</tr>
+				{{#each result7Clusters}}
+					<tr>
+						<td>{{index}}</td>
+						<td>{{clusterLength}}</td>
+						<td>({{centroid}})</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		<br>
+	{{else}} No Data!<br><br>{{/if}}
+	<hr>
+	<h3>Task 7b: Find 9 clusters based on DeckLevel and Fare</h3>
+	{{#if result9Clusters}}
+		Time to run: {{result9ClustersTime}}ms
+		<br><br>
+		<table class="table table-striped" style="border-bottom: 1px solid #dee2e6;">
+			<tbody>
+				<tr>
+					<th>Cluster</th>
+					<th>Number of Points</th>
+					<th>Centroid</th>
+				</tr>
+				{{#each result9Clusters}}
+					<tr>
+						<td>{{index}}</td>
+						<td>{{clusterLength}}</td>
+						<td>({{centroid}})</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		<br>
+	{{else}}
+		<br>
+		No Data!
+		<br><br>
+	{{/if}}
+	<hr>
+	<h3>Task 8: Clusters From Selected Attributes and Number of Clusters</h3>
+	<br>
+	<form class="getClustersByNumAttrsMinnow">
+		<div class="form-group">
+			<label for="clusters">Number of Clusters:</label>
+			<input type="text" name="clusters" id="clusters" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label for="attributes">Attributes:</label>
+			<input type="text" name="attributes" id="attributes" class="form-control" />
+		</div>
+		<input type="submit" value="Get Clusters" class="btn btn-primary" />
+	</form>
+	{{#if resultClusters}}
+		<br><br>
+		<table class="table table-striped" style="border-bottom: 1px solid #dee2e6;">
+			<tbody>
+				<tr>
+					<th>Cluster</th>
+					<th>Number of Points</th>
+					<th>Centroid</th>
+					<th>Max Distance</th>
+				</tr>
+				{{#each resultClusters}}
+					<tr>
+						<td>{{index}}</td>
+						<td>{{clusterLength}}</td>
+						<td>({{centroid}})</td>
+						<td>{{maxDist}}</td>
+					</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		<br>
+	{{else}}
+		<br>
+		No Data!
+		<br><br>
+	{{/if}}
+</template>

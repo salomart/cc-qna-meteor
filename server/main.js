@@ -430,5 +430,172 @@ Meteor.methods({
 		
 		data.unshift(centroids);
 		return data;
+	},
+	'get7And9Clusters': function() {
+		var queryStr = 'SELECT Age, Fare FROM q5minnow';
+		var queryStr2 = 'SELECT CabinNum, Fare FROM q5minnow';
+		var result = [];
+		var fut = new Future();
+		var startTime1 = new Date();
+		
+		connection.query(queryStr, function (error, results, fields) {
+			if (!error) {
+				let vectors = [];
+				
+				for (i=0; i<results.length; i++) {
+					let sample = [results[i]['Age'], results[i]['Fare']];
+					vectors[i] = sample;
+				}
+				
+				kmeans.clusterize(vectors, {k: parseInt(7)}, (err, res) => {
+					if (err) {
+						console.error(err);
+						fut.return([]);
+					} else {
+						fut.return(res);
+					}
+				});
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		var endTime1 = new Date();
+		
+		for (i=0; i<data.length; i++) {
+			data[i]['index'] = i + 1;
+		}
+		
+		result.push(data);
+		result.push(endTime1 - startTime1);
+		fut = new Future();
+		var startTime2 = new Date();
+		
+		connection.query(queryStr2, function (error, results, fields) {
+			if (!error) {
+				let vectors = [];
+				
+				for (i=0; i<results.length; i++) {
+					let sample = [parseInt(results[i]['CabinNum'] / 100.0), results[i]['Fare']];
+					vectors[i] = sample;
+				}
+				
+				kmeans.clusterize(vectors, {k: parseInt(9)}, (err, res) => {
+					if (err) {
+						console.error(err);
+						fut.return([]);
+					} else {
+						fut.return(res);
+					}
+				});
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		data = fut.wait();
+		var endTime2 = new Date();
+		
+		for (i=0; i<data.length; i++) {
+			data[i]['index'] = i + 1;
+		}
+		
+		result.push(data);
+		result.push(endTime2 - startTime2);
+		return result;
+	},
+	'getClustersByNumAttrsMinnow': function(clusters, attrArr) {
+		var queryStr = 'SELECT ' + attrArr[0] + ', ' + attrArr[1] + ' FROM q5minnow';
+		var fut = new Future();
+		
+		connection.query(queryStr, function (error, results, fields) {
+			if (!error) {
+				let vectors = [];
+				
+				for (i=0; i<results.length; i++) {
+					let sample = [results[i][attrArr[0]], results[i][attrArr[1]]];
+					vectors[i] = sample;
+				}
+				
+				kmeans.clusterize(vectors, {k: parseInt(clusters)}, (err, res) => {
+					if (err) {
+						console.error(err);
+						fut.return([]);
+					} else {
+						fut.return(res);
+					}
+				});
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		
+		for (i=0; i<data.length; i++) {
+			let maxDist = 0;
+			
+			for (j=0; j<data[i]['cluster'].length; j++) {
+				for (k=0; k<data[i]['cluster'].length; k++) {
+					let pointOne = data[i]['cluster'][j];
+					let pointTwo = data[i]['cluster'][k];
+					distance = Math.hypot(pointOne[0] - pointTwo[0], pointOne[1] - pointTwo[1]);
+					
+					if (distance > maxDist) {
+						maxDist = distance;
+					}
+				}
+			}
+			
+			data[i]['index'] = i + 1;
+			data[i]['maxDist'] = maxDist;
+		}
+		
+		return data;
+	},
+	'getStatesByYearPop': function(year, population) {
+		var queryStr = 'SELECT State FROM q3population WHERE `' + year + '` > ?';
+		
+		var fut = new Future();
+		
+		connection.query(queryStr, population, function (error, results, fields) {
+			if (!error) {
+				fut.return(results);
+			} else {
+				console.log(error);
+				fut.return([]);
+			}
+		});
+		
+		var data = fut.wait();
+		return data;
+	},
+	'getStatesByYearRandomPops': function(year, count) {
+		var times = [];
+		for (i=0; i<parseInt(count); i++) {
+			let startTime = new Date();
+			let population = Math.floor((Math.random() * 29000000) + 1000000);
+			let queryStr = 'SELECT State FROM q3population WHERE `' + year + '` > ?';
+			let fut = new Future();
+			
+			connection.query(queryStr, population, function (error, results, fields) {
+				if (!error) {
+					fut.return(results);
+				} else {
+					console.log(error);
+					fut.return([]);
+				}
+			});
+			
+			let data = fut.wait();
+			let endTime = new Date();
+			times.push({time: endTime - startTime});
+		}
+		
+		return times;
 	}
 });

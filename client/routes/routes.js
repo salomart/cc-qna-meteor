@@ -14,6 +14,10 @@ import '/client/pages/quizzes/quiz4.html';
 import '/client/pages/quizzes/quiz4';
 import '/client/pages/assignments/assignment5.html';
 import '/client/pages/assignments/assignment5';
+import '/client/pages/quizzes/quiz5.html';
+import '/client/pages/quizzes/quiz5';
+import '/client/pages/quizzes/quiz6.html';
+import '/client/pages/quizzes/quiz6';
 
 Router.configure({
 	layoutTemplate: 'layout'
@@ -45,4 +49,12 @@ Router.route('/quiz4', function () {
 
 Router.route('/assignment5', function () {
 	this.render('assignment5');
+});
+
+Router.route('/quiz5', function () {
+	this.render('quiz5');
+});
+
+Router.route('/quiz6', function () {
+	this.render('quiz6');
 });
